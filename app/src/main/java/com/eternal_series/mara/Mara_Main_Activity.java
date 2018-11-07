@@ -38,14 +38,14 @@ public class Mara_Main_Activity extends Activity implements View.OnClickListener
     @Override
     public void onClick(View view)
     {
-        //play_now button logic.
+        //play now button logic.
         if(view.getId() == R.id.play_now)
         {
             //starting the Mara_Game_Activity.
             startActivity(new Intent(this,Mara_Game_Activity.class));
         }
 
-        //high_score button logic.
+        //high score button logic.
         else if(view.getId() == R.id.high_score)
         {
         }

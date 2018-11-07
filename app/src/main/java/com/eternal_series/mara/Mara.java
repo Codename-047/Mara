@@ -12,7 +12,7 @@ public class Mara
     private float y;
 
     //speed of mara.
-    private float speed = 0.0f;
+    private float speed;
 
     //Bitmap to get the character.
     private Bitmap mara;

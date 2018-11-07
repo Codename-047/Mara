@@ -10,7 +10,6 @@ import static java.lang.Thread.sleep;
 
 public class Mara_Game_View extends SurfaceView implements Runnable
 {
-
     //boolean variable to track if the game is playing or not.
     volatile boolean isPlaying;
 
