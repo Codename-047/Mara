@@ -17,6 +17,12 @@ public class Mara_Game_View extends SurfaceView implements Runnable
     //the game thread.
     private Thread maraGameThread = null;
 
+    //adding mara to this class.
+    Mara mara;
+
+    //adding battlefield to this class.
+    Battlefield battlefield;
+
     //These objects are used for drawing.
     private SurfaceHolder surfaceHolder;
     private Canvas canvas;
@@ -26,6 +32,16 @@ public class Mara_Game_View extends SurfaceView implements Runnable
     public Mara_Game_View(Context context)
     {
         super(context);
+
+        //initializing the mara object.
+        mara = new Mara(context);
+
+        //initializing the battlefield object.
+        battlefield = new Battlefield(context);
+
+        //initializing the drawing object.
+        surfaceHolder = getHolder();
+        paint = new Paint();
     }
 
     private void update()
@@ -35,6 +51,21 @@ public class Mara_Game_View extends SurfaceView implements Runnable
 
     private void draw()
     {
+        //checking if the surface is valid.
+        if(surfaceHolder.getSurface().isValid())
+        {
+            //locking the canvas.
+            canvas = surfaceHolder.lockCanvas();
+
+            //Drawing the battlefield.
+            canvas.drawBitmap(battlefield.getBattlefield(),0,0,paint);
+
+            //Drawing the player.
+            canvas.drawBitmap(mara.getMara(),mara.getX(),mara.getY(),paint);
+
+            //unlocking the canvas.
+            surfaceHolder.unlockCanvasAndPost(canvas);
+        }
 
     }
 
