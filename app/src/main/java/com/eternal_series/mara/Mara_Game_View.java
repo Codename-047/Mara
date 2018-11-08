@@ -19,6 +19,9 @@ public class Mara_Game_View extends SurfaceView implements Runnable
     //adding mara to this class.
     Mara mara;
 
+    //adding the fire button to this class.
+    Fire fireButton;
+
     //adding battlefield to this class.
     Battlefield battlefield;
 
@@ -37,6 +40,9 @@ public class Mara_Game_View extends SurfaceView implements Runnable
 
         //initializing the battlefield object.
         battlefield = new Battlefield(context);
+
+        //initializing the fire object.
+        fireButton = new Fire(context);
 
         //initializing the drawing object.
         surfaceHolder = getHolder();
@@ -58,6 +64,9 @@ public class Mara_Game_View extends SurfaceView implements Runnable
 
             //Drawing the battlefield.
             canvas.drawBitmap(battlefield.getBattlefield(),0,0,paint);
+
+            //Drawing the fire button.
+            canvas.drawBitmap(fireButton.getFireButton(),fireButton.getX(),fireButton.getY(),paint);
 
             //Drawing the player.
             canvas.drawBitmap(mara.getMara(),mara.getX(),mara.getY(),paint);
