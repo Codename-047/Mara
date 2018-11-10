@@ -36,8 +36,8 @@ public class Mara
         mara = BitmapFactory.decodeResource(context.getResources(),R.drawable.hero);
 
         //setting the variables.
-        x = screenWidth() / 2;
-        y = screenHeight() / 2;
+        x = (screenWidth() - getMaraWidth()) / 2;
+        y = (screenHeight() - getMaraHeight()) / 2;
         speed = 1;
     }
 

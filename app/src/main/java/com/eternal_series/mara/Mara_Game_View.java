@@ -2,7 +2,9 @@ package com.eternal_series.mara;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -34,6 +36,10 @@ public class Mara_Game_View extends SurfaceView implements Runnable
     private Canvas canvas;
     private Paint paint;
 
+    //matrix to rotate mara in the direction of touch.
+    Matrix maraFacingAngle;
+    public int maraRotation = 0;
+
     //Class constructor.
     public Mara_Game_View(Context context)
     {
@@ -50,6 +56,11 @@ public class Mara_Game_View extends SurfaceView implements Runnable
 
         //initializing the arrow object.
         arrow = new Arrow(context);
+
+        //initializing the matrix object and setting its default position.
+        maraFacingAngle = new Matrix();
+        maraFacingAngle.postTranslate(mara.getX(),mara.getY());
+
 
         //initializing the drawing object.
         surfaceHolder = getHolder();
@@ -81,7 +92,7 @@ public class Mara_Game_View extends SurfaceView implements Runnable
             canvas.drawBitmap(fireButton.getFireButton(),fireButton.getX(),fireButton.getY(),paint);
 
             //Drawing the player.
-            canvas.drawBitmap(mara.getMara(),mara.getX(),mara.getY(),paint);
+            canvas.drawBitmap(mara.getMara(),maraFacingAngle,paint);
 
             //Drawing the arrow if fire button is clicked.
             if(arrow.arrowIsShot)
@@ -108,9 +119,11 @@ public class Mara_Game_View extends SurfaceView implements Runnable
     }
 
     @Override
-    public void run() {
+    public void run()
+    {
 
-        while (isPlaying) {
+        while (isPlaying)
+        {
 
             //to update the frame.
             update();
@@ -131,6 +144,10 @@ public class Mara_Game_View extends SurfaceView implements Runnable
         {
             //When the screen is touched.
             case MotionEvent.ACTION_DOWN:
+
+                //calculates the mara angle.
+                computeAngle(motionEvent);
+
                 //When the fire button is touched.
                 if(isFireButtonClicked(motionEvent))
                 {
@@ -142,7 +159,7 @@ public class Mara_Game_View extends SurfaceView implements Runnable
         return false;
     }
 
-    //
+    //to check if the fire button is clicked.
     public boolean isFireButtonClicked(MotionEvent motionEvent)
     {
         return ((motionEvent.getX() >= fireButton.getX() &&
@@ -150,6 +167,28 @@ public class Mara_Game_View extends SurfaceView implements Runnable
                 //to wrap the whole button.
                 && (motionEvent.getY() >= fireButton.getY() &&
                 motionEvent.getY() <= fireButton.getY() + fireButton.getFireButtonHeight()));
+    }
+
+    //to calculate the direction of touch
+    public void computeAngle(MotionEvent motionEvent)
+    {
+        //calculates the direction only if the fire button is not clicked.
+        if(!isFireButtonClicked(motionEvent))
+        {
+            //calculating the direction relative to mara.
+            maraRotation = - (int) (Math.toDegrees(Math.atan2(
+                    mara.getX() + mara.getMaraWidth() / 2 - motionEvent.getX()
+                    , mara.getY() + mara.getMaraHeight() / 2 - motionEvent.getY())));
+            //minus to calculate the degrees in clock wise direction instead of anti-clock wise.
+
+            //creating a matrix for angle of direction.
+            Matrix angle = new Matrix();
+            angle.setRotate(maraRotation, mara.getMaraWidth() / 2, mara.getMaraHeight() / 2);
+            angle.postTranslate(mara.getX(), mara.getY());
+
+            //rotating the mara matrix to a certain angle.
+            maraFacingAngle.set(angle);
+        }
     }
 
     public void pause()
