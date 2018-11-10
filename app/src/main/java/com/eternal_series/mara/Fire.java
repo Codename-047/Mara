@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 
 public class Fire
 {
-    //Bitmap to get the character.
+    //Bitmap to get the button.
     private Bitmap fireButton;
 
     //coordinates.
@@ -36,5 +36,15 @@ public class Fire
     public float getY()
     {
         return y;
+    }
+
+    public float getFireButtonWidth()
+    {
+        return fireButton.getWidth();
+    }
+
+    public float getFireButtonHeight()
+    {
+        return fireButton.getHeight();
     }
 }

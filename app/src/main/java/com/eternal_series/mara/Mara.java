@@ -56,4 +56,14 @@ public class Mara
     {
         return y;
     }
+
+    public float getMaraWidth()
+    {
+        return mara.getWidth();
+    }
+
+    public float getMaraHeight()
+    {
+        return mara.getHeight();
+    }
 }

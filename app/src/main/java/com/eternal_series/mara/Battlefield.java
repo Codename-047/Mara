@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 
 public class Battlefield
 {
-    //Bitmap to get the character.
+    //Bitmap to get the battlefield.
     private Bitmap battlefield;
 
     //battlefield constructor.

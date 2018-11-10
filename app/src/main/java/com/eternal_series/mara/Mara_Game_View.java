@@ -3,6 +3,7 @@ package com.eternal_series.mara;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -25,6 +26,9 @@ public class Mara_Game_View extends SurfaceView implements Runnable
     //adding battlefield to this class.
     Battlefield battlefield;
 
+    //adding arrow to this class.
+    Arrow arrow;
+
     //These objects are used for drawing.
     private SurfaceHolder surfaceHolder;
     private Canvas canvas;
@@ -44,6 +48,9 @@ public class Mara_Game_View extends SurfaceView implements Runnable
         //initializing the fire object.
         fireButton = new Fire(context);
 
+        //initializing the arrow object.
+        arrow = new Arrow(context);
+
         //initializing the drawing object.
         surfaceHolder = getHolder();
         paint = new Paint();
@@ -51,6 +58,11 @@ public class Mara_Game_View extends SurfaceView implements Runnable
 
     private void update()
     {
+        //if the arrow is shot, updates its coordinates.
+        if(arrow.arrowIsShot)
+        {
+            arrow.update();
+        }
 
     }
 
@@ -71,10 +83,15 @@ public class Mara_Game_View extends SurfaceView implements Runnable
             //Drawing the player.
             canvas.drawBitmap(mara.getMara(),mara.getX(),mara.getY(),paint);
 
+            //Drawing the arrow if fire button is clicked.
+            if(arrow.arrowIsShot)
+            {
+                canvas.drawBitmap(arrow.getArrow(), arrow.getX(), arrow.getY(), paint);
+            }
+
             //unlocking the canvas.
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
-
     }
 
     private void control()
@@ -91,11 +108,9 @@ public class Mara_Game_View extends SurfaceView implements Runnable
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
 
-        while(isPlaying)
-        {
+        while (isPlaying) {
 
             //to update the frame.
             update();
@@ -107,6 +122,34 @@ public class Mara_Game_View extends SurfaceView implements Runnable
             control();
         }
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent)
+    {
+        switch(motionEvent.getAction())
+        {
+            //When the screen is touched.
+            case MotionEvent.ACTION_DOWN:
+                //When the fire button is touched.
+                if(isFireButtonClicked(motionEvent))
+                {
+                    //allows another arrow, if the number of arrows on the screen is less than one.
+                    if(arrow.getArrowCount() < 1)
+                    arrow.shoot();
+                }
+        }
+        return false;
+    }
+
+    //
+    public boolean isFireButtonClicked(MotionEvent motionEvent)
+    {
+        return ((motionEvent.getX() >= fireButton.getX() &&
+                motionEvent.getX() <= fireButton.getX() + fireButton.getFireButtonWidth())
+                //to wrap the whole button.
+                && (motionEvent.getY() >= fireButton.getY() &&
+                motionEvent.getY() <= fireButton.getY() + fireButton.getFireButtonHeight()));
     }
 
     public void pause()
