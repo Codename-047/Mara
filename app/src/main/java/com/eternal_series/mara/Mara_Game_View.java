@@ -58,11 +58,8 @@ public class Mara_Game_View extends SurfaceView implements Runnable
 
     private void update()
     {
-        //if the arrow is shot, update its coordinates.
-        if(arrow.arrowIsShot)
-        {
+        if(Arrow.isArrowShot)
             arrow.update();
-        }
     }
 
     private void draw()
@@ -83,10 +80,8 @@ public class Mara_Game_View extends SurfaceView implements Runnable
             canvas.drawBitmap(mara.getMara(),mara.getMaraDirectionMatrix(),paint);
 
             //Drawing the arrow if fire button is clicked.
-            if(arrow.arrowIsShot)
-            {
+            if(Arrow.isArrowShot)
                 canvas.drawBitmap(arrow.getArrow(),arrow.getArrowDirectionMatrix(), paint);
-            }
 
             //unlocking the canvas.
             surfaceHolder.unlockCanvasAndPost(canvas);
@@ -137,12 +132,10 @@ public class Mara_Game_View extends SurfaceView implements Runnable
                 //When the fire button is touched.
                 if(fireButton.isFireButtonClicked(motionEvent))
                 {
-                    //allows another arrow, if the number of arrows on the screen is less than one.
-                    if(arrow.getArrowCount() < 1)
-                    {
-                        arrow.computeArrowAngle();
-                        arrow.shoot();
-                    }
+                    //since the arrow is shot set it true and compute the angle.
+                    Arrow.isArrowShot = true;
+                    Arrow.arrowCount += 1;
+                    arrow.computeArrowAngle();
                 }
         }
         return false;

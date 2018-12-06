@@ -17,17 +17,24 @@ public class Arrow
     //speed of arrow.
     private float speed;
 
-    //boolean to track if the arrow is shot or not.
-    public boolean arrowIsShot;
+    //boolean to know if the arrow is shot.
+    static boolean isArrowShot = false;
+
+    //to limit the number of arrows that can be shot to 1.
+    static int arrowCount = 0;
 
     //Adding mara to this class to get his coordinates.
     Mara mara;
 
-    //Arrow count.
-    public int arrowCount = 0;
-
     //matrix to rotate arrow in the direction of mara.
     Matrix arrowDirectionMatrix;
+
+    //temporary variable so as not to change the angle when the update method is called.
+    int arrowRotationAngle = 0;
+
+    //to make the arrow move in the angle it was shot.
+    float angleX;
+    float angleY;
 
     //Arrow constructor.
     public Arrow(Context context)
@@ -38,51 +45,51 @@ public class Arrow
         //initializing the mara object.
         mara = new Mara(context);
 
-        //setting the variables.
+        //setting the variables centre to mara.
         x = mara.getX();
         y = mara.getY();
-        speed = 10;
+        speed = 20;
 
         //initializing the arrow matrix and setting its default value.
         arrowDirectionMatrix = new Matrix();
-        arrowDirectionMatrix.postTranslate(getX(),getY());
+        arrowDirectionMatrix.setTranslate(x,y);
     }
-
 
     public void update()
     {
-        //Checks if the arrow is out of the screen bounds.
-        if((y <= 0 || y >= Mara.screenHeight()) || (x <= 0 || x >= Mara.screenWidth()))
+        //to check if the arrow is out of the screen.
+        if((x > Mara.screenWidth() + arrow.getWidth() || x <= 0)||(y <= 0 || y > Mara.screenHeight() + arrow.getHeight()) )
         {
-            //resets the number of arrows on the screen to zero.
+            //if so, set the number of arrows on the screen to zero.
             arrowCount = 0;
+            isArrowShot = false;
         }
 
-        //TODO make the arrow move forward.
-        y = y - speed;
-    }
-
-    public void shoot()
-    {
-        //arrow is shot.
-        arrowIsShot = true;
-
-        //since the arrow is shot increase the count.
-        arrowCount = arrowCount + 1;
+        arrowDirectionMatrix.setRotate(arrowRotationAngle, mara.getMaraWidth() / 2, mara.getMaraHeight() / 2);
+        arrowDirectionMatrix.postTranslate(x = x + angleX * speed,y = y + angleY * speed);
     }
 
     //to calculate the arrow angle.
     public void computeArrowAngle()
     {
-        //matrix to calculate the angle.
-        Matrix angle = new Matrix();
+        if(arrowCount == 1) {
+            //setting the variable to the angle it was, at the time of clicking the fire button.
+            arrowRotationAngle = Mara.maraRotatingAngle;
 
-        //setting the rotation for matrix.
-        angle.setRotate(Mara.maraRotatingAngle, mara.getMaraWidth() / 2, mara.getMaraHeight() / 2);
-        angle.postTranslate(mara.getX(),mara.getY());
+            //setting the rotation for matrix and its default values.
+            arrowDirectionMatrix.setRotate(arrowRotationAngle, mara.getMaraWidth() / 2, mara.getMaraHeight() / 2);
+            arrowDirectionMatrix.postTranslate(mara.getX(), mara.getY());
 
-        //rotating the mara matrix to certain angle.
-        arrowDirectionMatrix.set(angle);
+            //setting the default values of x and y.
+            x = mara.getX();
+            y = mara.getY();
+
+            //TODO:Document the angle of arrow.
+            angleX = (float) Math.sin(Math.toRadians(Mara.maraRotatingAngle));
+            angleY = -(float) Math.cos(Math.toRadians(Mara.maraRotatingAngle));
+            //minus because the y axis increases in the downward direction.
+        }
+
     }
 
     //getters.
@@ -99,11 +106,6 @@ public class Arrow
     public float getY()
     {
         return y;
-    }
-
-    public int getArrowCount()
-    {
-        return arrowCount;
     }
 
     public Matrix getArrowDirectionMatrix()

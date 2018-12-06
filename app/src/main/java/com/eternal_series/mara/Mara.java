@@ -41,7 +41,7 @@ public class Mara
         //getting the bitmap from the drawable resources.
         mara = BitmapFactory.decodeResource(context.getResources(),R.drawable.hero);
 
-        //setting the variables.
+        //initially setting the variables to the centre of the screen.
         x = (screenWidth() - getMaraWidth()) / 2;
         y = (screenHeight() - getMaraHeight()) / 2;
         speed = 1;
@@ -54,24 +54,18 @@ public class Mara
     //to calculate the direction of touch.
     public void computeMaraAngle(MotionEvent motionEvent)
     {
-        //matrix to calculate the angle.
-        Matrix angle = new Matrix();
-
+        //TODO Documentation: ANGLE OF MARA.
         //calculating the direction relative to mara.
          maraRotatingAngle = - (int) (Math.toDegrees(Math.atan2(
                 getX() + getMaraWidth() / 2 - motionEvent.getX()
                 , getY() + getMaraHeight() / 2 - motionEvent.getY())));
         //minus to calculate the degrees in clock wise direction instead of anti-clock wise.
 
-        //setting the rotation for matrix.
-        angle.setRotate(maraRotatingAngle,getMaraWidth() / 2, getMaraHeight() / 2);
-        angle.postTranslate(getX(),getY());
+        if(maraRotatingAngle < 0)
+            maraRotatingAngle += 360;
 
-        //rotating the mara matrix to certain angle.
-        maraDirectionMatrix.set(angle);
-
-        //test
-        //Log.i("x direction",Double.toString(Math.sin(Math.toRadians(maraRotatingAngle))));
+        maraDirectionMatrix.setRotate(maraRotatingAngle,getMaraWidth() / 2, getMaraHeight() / 2);
+        maraDirectionMatrix.postTranslate(getX(),getY());
     }
 
     //getters.
