@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.view.MotionEvent;
 
 public class Mara
 {
@@ -16,6 +18,10 @@ public class Mara
 
     //Bitmap to get the character.
     private Bitmap mara;
+
+    //matrix to rotate mara in the direction of touch.
+    Matrix maraDirectionMatrix;
+    static int maraRotatingAngle;
 
     //screen width.
     public static int screenWidth()
@@ -39,6 +45,33 @@ public class Mara
         x = (screenWidth() - getMaraWidth()) / 2;
         y = (screenHeight() - getMaraHeight()) / 2;
         speed = 1;
+
+        //initializing the matrix object and setting its default position.
+        maraDirectionMatrix = new Matrix();
+        maraDirectionMatrix.postTranslate(getX(),getY());
+    }
+
+    //to calculate the direction of touch.
+    public void computeMaraAngle(MotionEvent motionEvent)
+    {
+        //matrix to calculate the angle.
+        Matrix angle = new Matrix();
+
+        //calculating the direction relative to mara.
+         maraRotatingAngle = - (int) (Math.toDegrees(Math.atan2(
+                getX() + getMaraWidth() / 2 - motionEvent.getX()
+                , getY() + getMaraHeight() / 2 - motionEvent.getY())));
+        //minus to calculate the degrees in clock wise direction instead of anti-clock wise.
+
+        //setting the rotation for matrix.
+        angle.setRotate(maraRotatingAngle,getMaraWidth() / 2, getMaraHeight() / 2);
+        angle.postTranslate(getX(),getY());
+
+        //rotating the mara matrix to certain angle.
+        maraDirectionMatrix.set(angle);
+
+        //test
+        //Log.i("x direction",Double.toString(Math.sin(Math.toRadians(maraRotatingAngle))));
     }
 
     //getters.
@@ -65,5 +98,10 @@ public class Mara
     public float getMaraHeight()
     {
         return mara.getHeight();
+    }
+
+    public Matrix getMaraDirectionMatrix()
+    {
+        return maraDirectionMatrix;
     }
 }

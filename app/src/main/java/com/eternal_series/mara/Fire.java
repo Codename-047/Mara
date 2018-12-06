@@ -3,6 +3,7 @@ package com.eternal_series.mara;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.MotionEvent;
 
 public class Fire
 {
@@ -20,6 +21,16 @@ public class Fire
         fireButton = BitmapFactory.decodeResource(context.getResources(),R.drawable.fire);
         x = Mara.screenWidth() - 450;
         y = Mara.screenHeight() - 400;
+    }
+
+    //to check if the fire button is clicked.
+    public boolean isFireButtonClicked(MotionEvent motionEvent)
+    {
+        return ((motionEvent.getX() >= getX() &&
+                motionEvent.getX() <= getX() + getFireButtonWidth())
+                //to wrap the whole button.
+                && (motionEvent.getY() >= getY() &&
+                motionEvent.getY() <= getY() + getFireButtonHeight()));
     }
 
     //getters.
