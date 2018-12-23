@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class Mara
@@ -59,7 +60,7 @@ public class Mara
          maraRotatingAngle = - (int) (Math.toDegrees(Math.atan2(
                 getX() + getMaraWidth() / 2 - motionEvent.getX()
                 , getY() + getMaraHeight() / 2 - motionEvent.getY())));
-        //minus to calculate the degrees in clock wise direction instead of anti-clock wise.
+         //minus to calculate the degrees in clock wise direction instead of anti-clock wise.
 
         if(maraRotatingAngle < 0)
             maraRotatingAngle += 360;

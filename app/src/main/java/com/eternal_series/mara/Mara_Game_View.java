@@ -3,9 +3,11 @@ package com.eternal_series.mara;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import static java.lang.Thread.sleep;
 
@@ -29,6 +31,12 @@ public class Mara_Game_View extends SurfaceView implements Runnable
     //adding arrow to this class.
     Arrow arrow;
 
+    //adding joystick to this class.
+    Joystick joystick;
+
+    //adding knob to this class.
+    Knob knob;
+
     //These objects are used for drawing.
     private SurfaceHolder surfaceHolder;
     private Canvas canvas;
@@ -50,6 +58,12 @@ public class Mara_Game_View extends SurfaceView implements Runnable
 
         //initializing the arrow object.
         arrow = new Arrow(context);
+
+        //initializing the joystick object.
+        joystick = new Joystick(context);
+
+        //initializing the knob object.
+        knob = new Knob(context);
 
         //initializing the drawing object.
         surfaceHolder = getHolder();
@@ -75,6 +89,12 @@ public class Mara_Game_View extends SurfaceView implements Runnable
 
             //Drawing the fire button.
             canvas.drawBitmap(fireButton.getFireButton(),fireButton.getX(),fireButton.getY(),paint);
+
+            //Drawing the joystick.
+            canvas.drawBitmap(joystick.getJoystick(),joystick.getX(),joystick.getY(),paint);
+
+            //Drawing the knob.
+            canvas.drawBitmap(knob.getKnob(),knob.getX(),knob.getY(),paint);
 
             //Drawing the player.
             canvas.drawBitmap(mara.getMara(),mara.getMaraDirectionMatrix(),paint);
@@ -124,21 +144,46 @@ public class Mara_Game_View extends SurfaceView implements Runnable
         {
             //When the screen is touched.
             case MotionEvent.ACTION_DOWN:
-
+            {
                 //calculates the mara angle if the fire button is not clicked.
-                if(!fireButton.isFireButtonClicked(motionEvent))
+                if (!fireButton.isFireButtonClicked(motionEvent))
                     mara.computeMaraAngle(motionEvent);
 
                 //When the fire button is touched.
-                if(fireButton.isFireButtonClicked(motionEvent))
+                if (fireButton.isFireButtonClicked(motionEvent))
                 {
                     //since the arrow is shot set it true and compute the angle.
                     Arrow.isArrowShot = true;
                     Arrow.arrowCount += 1;
                     arrow.computeArrowAngle();
                 }
+
+                if (knob.isKnobTouched(motionEvent))
+                {
+                    knob.touchedCoordinates(motionEvent);
+                }
+            }
+
+            break;
+
+            case MotionEvent.ACTION_MOVE:
+            {
+                //only if the knob is touched -- then send the coordinates to be updated
+                if(knob.isTouched)
+                    knob.movedCoordinates(motionEvent);
+            }
+            break;
+
+            case MotionEvent.ACTION_UP:
+            {
+                //the knob which was touched has been released
+                if(knob.isTouched)
+                {
+                    knob.released();
+                }
+            }
         }
-        return false;
+        return true;
     }
 
     public void pause()
