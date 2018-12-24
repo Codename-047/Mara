@@ -17,6 +17,10 @@ public class Knob
     //to know if the knob is touched
     boolean isTouched = false;
 
+    //
+    static float normalizedX = 0;
+    static float normalizedY = 0;
+
     //adding joystick to this class to get its height and width.
     Joystick joystick;
 
@@ -59,7 +63,6 @@ public class Knob
             angle += 360;
 
         return angle;
-
     }
 
     //coordinates of the knob when it is touched
@@ -88,8 +91,8 @@ public class Knob
     void boundingKnob(float x, float y)
     {
         //TODO document normalizedX and normalizedY.
-        float normalizedX = joystick.getWidth() / 2 * (float)(Math.cos(Math.toRadians(calculateAngle())));
-        float normalizedY = joystick.getHeight() / 2 * (float)(-1 * Math.sin(Math.toRadians(calculateAngle())));
+        normalizedX = joystick.getWidth() / 2 * (float)(Math.cos(Math.toRadians(calculateAngle())));
+        normalizedY = joystick.getHeight() / 2 * (float)(-1 * Math.sin(Math.toRadians(calculateAngle())));
 
         float a,b,c;
         a = joystick.getCentreX() - x;
@@ -104,6 +107,7 @@ public class Knob
             setY(joystick.getCentreY() + normalizedY);
         }
 
+        //to draw the knob at the center of the finger.
         knobdrawX();
         knobdrawY();
     }
@@ -115,6 +119,7 @@ public class Knob
 
     void knobdrawY()
     {
+
         setY(y - knob.getHeight() / 2);
     }
 
@@ -131,6 +136,10 @@ public class Knob
     public float getX(){return x;}
 
     public float getY(){return y;}
+
+    public float getNormalizedX(){return normalizedX;}
+
+    public float getNormalizedY(){return normalizedY;}
 
     //setters.
     public void setX(float coordinate){x = coordinate;}

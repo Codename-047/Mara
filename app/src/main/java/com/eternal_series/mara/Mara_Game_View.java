@@ -74,6 +74,9 @@ public class Mara_Game_View extends SurfaceView implements Runnable
     {
         if(Arrow.isArrowShot)
             arrow.update();
+
+        if(knob.isTouched)
+            mara.update();
     }
 
     private void draw()
@@ -146,7 +149,7 @@ public class Mara_Game_View extends SurfaceView implements Runnable
             case MotionEvent.ACTION_DOWN:
             {
                 //calculates the mara angle if the fire button is not clicked.
-                if (!fireButton.isFireButtonClicked(motionEvent))
+                if (!fireButton.isFireButtonClicked(motionEvent) && !knob.isKnobTouched(motionEvent))
                     mara.computeMaraAngle(motionEvent);
 
                 //When the fire button is touched.
